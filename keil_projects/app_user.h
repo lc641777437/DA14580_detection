@@ -5,7 +5,7 @@
 
 #define KEY_BT_ADDR_LENGTH 6
 #define KEY_BT_ADDR_MAX_COUNTER 5
-#define TIMES_4_LOSE_KEY 1
+#define TIMES_4_LOSE_KEY 2
 
 extern uint8_t key_bt_addr[KEY_BT_ADDR_MAX_COUNTER][KEY_BT_ADDR_LENGTH + 1];
 int da14580_resetTime(void);
