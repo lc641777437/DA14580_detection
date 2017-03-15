@@ -463,12 +463,6 @@ int gapm_adv_report_ind_handler(ke_msg_id_t const msgid,
     return (KE_MSG_CONSUMED);
 }
 
-/*
- * GLOBAL VARIABLES DEFINITION
- ****************************************************************************************
- */
-
-
 /* Specifies the message handlers that are common to all states. */
 
 const struct ke_state_handler app_default_handler = KE_STATE_HANDLER(app_default_state);
