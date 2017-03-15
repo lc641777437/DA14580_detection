@@ -1,0 +1,74 @@
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+#*.so
+#*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+bin/
+build/
+
+# Log
+log
+
+# data
+*.dat
+
+# Debug files
+*.dSYM/
+
+#eclipse project file
+.project
+.cproject
+.settings
+
+#netbeans project files
+nbproject/
+
+#CLion project files
+.idea
+
+#Visual Studio Code project files
+.vscode/
+
+#source insight project files
+*.IAB
+*.IAD
+*.IMB
+*.IMD
+*.PFI
+*.PO
+*.PR
+*.PRI
+*.PS
+*.WK3
+
+#KEIL
+JLinkLog.txt
+*.uvgui.*
+*.d
+*.crf
+*.hex
+*/out/*
