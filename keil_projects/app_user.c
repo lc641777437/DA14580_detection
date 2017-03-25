@@ -141,7 +141,7 @@ static int da14580_getBTaddressReq(const DA14580_MSG* req)
         memset(key_bt_addr[i], 0, KEY_BT_ADDR_LENGTH + 1);
     }
 
-    da14580_getMsgHeader((DA14580_MSG *)msg, CMD_GET_BTADDRESS, len);
+    da14580_getMsgHeader((DA14580_MSG *)msg, CMD_SEND_BTADDRESS, len);
 
     da14580_sendUart(msg, sizeof(DA14580_MSG) + len);
     return 0;
