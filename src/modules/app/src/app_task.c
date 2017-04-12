@@ -451,11 +451,8 @@ int gapm_adv_report_ind_handler(ke_msg_id_t const msgid,
     {
         if(!memcmp(&param->report.adv_addr, key_bt_addr[i]+1, APP_DFLT_ADV_addr_LEN))
         {
-            if(!da14580_isHaveKey())
-            {
-                da14580_sendUnlockedReq();
-            }
-            da14580_resetTime();
+            da14580_sendGetKeyReq();
+            da14580_HaveKey(1);
             return (KE_MSG_CONSUMED);
         }
         i++;

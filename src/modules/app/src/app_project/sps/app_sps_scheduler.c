@@ -400,12 +400,12 @@ static void uart_rx_callback(uint8_t res, uint32_t read_size)
     if(res == UART_STATUS_OK) 
     {	
         app_uart_push(rx_read_pointer, RX_CALLBACK_SIZE, rx_state_ptr);
-        DA14580_uartHandler(rx_read_pointer);
+        DA14580_uartHandler(rx_read_pointer, read_size);
     }
     else if(res == UART_STATUS_TIMEOUT) //function called from uart timeout isr	
     {
         app_uart_push(rx_read_pointer, read_size, rx_state_ptr);
-        DA14580_uartHandler(rx_read_pointer);
+        DA14580_uartHandler(rx_read_pointer, read_size);
     }
     else
     {

@@ -288,14 +288,14 @@ void app_scanning(void)
 
 	if(!key_bt_addr[0][0])//no key addr
     {
-        da14580_sendBTaddressReq();
+        da14580_getBTaddressReq();
     }
-
-    if(da14580_isHaveKey() && da14580_getTime() == TIMES_4_LOSE_KEY)
+    
+    if(!da14580_isHaveKey())
     {
-        da14580_sendLockedReq();
+        da14580_sendNGetKeyReq();
     }
-    da14580_addTime();
+    da14580_HaveKey(0);
 
     msg->mode = GAP_GEN_DISCOVERY;
     msg->op.code = GAPM_SCAN_PASSIVE;

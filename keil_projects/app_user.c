@@ -25,8 +25,8 @@ enum
 {
     CMD_GET_BTADDRESS    = 0,
     CMD_SEND_BTADDRESS   = 1,
-    CMD_GET_UNLOCKED     = 2,
-    CMD_GET_LOCKED       = 3
+    CMD_GETKEY           = 2,
+    CMD_NGETKEY          = 3
 };
 
 static int da14580_getMsgHeader(DA14580_MSG *msg, unsigned char cmd, short len)
@@ -68,7 +68,7 @@ int da14580_getTime(void)
     return times;
 }
 
-int da14580_sendBTaddressReq(void)
+int da14580_getBTaddressReq(void)
 {
     short len = 0;
     unsigned char msg[MAX_DA14580_MSG_LEN] = {0};
@@ -79,32 +79,30 @@ int da14580_sendBTaddressReq(void)
     return 0;
 }
 
-int da14580_sendUnlockedReq(void)
+int da14580_sendGetKeyReq(void)
 {
     short len = DA14580_BTADDRESS_LEN;
     unsigned char msg[MAX_DA14580_MSG_LEN] = {0};
 
     da14580_HaveKey(1);
 
-    da14580_getMsgHeader((DA14580_MSG *)msg, CMD_GET_UNLOCKED, len);
+    da14580_getMsgHeader((DA14580_MSG *)msg, CMD_GETKEY, len);
     da14580_sendUart(msg, sizeof(DA14580_MSG) + len);
     return 0;
 }
 
 
-int da14580_sendLockedReq(void)
+int da14580_sendNGetKeyReq(void)
 {
     short len = DA14580_BTADDRESS_LEN;
     unsigned char msg[MAX_DA14580_MSG_LEN] = {0};
 
-    da14580_HaveKey(0);
-
-    da14580_getMsgHeader((DA14580_MSG *)msg, CMD_GET_LOCKED, len);
+    da14580_getMsgHeader((DA14580_MSG *)msg, CMD_NGETKEY, len);
     da14580_sendUart(msg, sizeof(DA14580_MSG) + len);
     return 0;
 }
 
-static int da14580_sendBTaddressRsp(const DA14580_MSG* req)
+static int da14580_getBTaddressRsp(const DA14580_MSG* req)
 {
     int i = 0;
     short length = req->length;
@@ -123,7 +121,7 @@ static int da14580_sendBTaddressRsp(const DA14580_MSG* req)
     return 0;
 }
 
-static int da14580_getBTaddressReq(const DA14580_MSG* req)
+static int da14580_sendBTaddressRsp(const DA14580_MSG* req)
 {
     int i = 0;
     short len = 0;
@@ -147,13 +145,13 @@ static int da14580_getBTaddressReq(const DA14580_MSG* req)
     return 0;
 }
 
-static int da14580_sendUnlockedRsp(const DA14580_MSG* req)
+static int da14580_sendGetKeyRsp(const DA14580_MSG* req)
 {
     //TODO: nothing
     return 0;
 }
 
-static int da14580_sendLockedRsp(const DA14580_MSG* req)
+static int da14580_sendNGetKeyRsp(const DA14580_MSG* req)
 {
     //TODO: nothing
     return 0;
@@ -167,26 +165,36 @@ typedef struct
 
 DA14580_MAP da14580_map[]=
 {
-    {CMD_GET_BTADDRESS,      da14580_sendBTaddressRsp},
-    {CMD_SEND_BTADDRESS,     da14580_getBTaddressReq},
-    {CMD_GET_UNLOCKED,       da14580_sendUnlockedRsp},
-    {CMD_GET_LOCKED,         da14580_sendLockedRsp}
+    {CMD_GET_BTADDRESS,      da14580_getBTaddressRsp},
+    {CMD_SEND_BTADDRESS,     da14580_sendBTaddressRsp},
+    {CMD_GETKEY,             da14580_sendGetKeyRsp},
+    {CMD_NGETKEY,            da14580_sendNGetKeyRsp}
 };
 
-int DA14580_uartHandler(unsigned char *buf)
+int DA14580_uartHandler(unsigned char *buf, uint32_t len)
 {
     int i = 0;
+    int leftLen = len;
     DA14580_MSG *msg = (DA14580_MSG *)buf;
-    if(msg->signature == (short)(0xA5A5))
+    while(len >= msg->length + sizeof(DA14580_MSG))
     {
+        if(msg->signature != (short)(0xA5A5))
+        {
+            return -1;
+        }
+        
         for(i = 0; i < sizeof(da14580_map)/sizeof(da14580_map[0]); i++)
         {
             if(msg->cmd== da14580_map[i].cmd)
             {
                 da14580_map[i].action(msg);
-                return 0;
+                break;
             }
         }
+        
+        leftLen = leftLen - sizeof(DA14580_MSG) - msg->length;
+        msg = (DA14580_MSG *)((const char *)buf + len - leftLen);
+
     }
     return 0;
 }
