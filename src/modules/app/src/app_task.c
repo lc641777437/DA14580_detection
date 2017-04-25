@@ -453,6 +453,7 @@ int gapm_adv_report_ind_handler(ke_msg_id_t const msgid,
         {
             da14580_sendGetKeyReq();
             da14580_HaveKey(1);
+            
             return (KE_MSG_CONSUMED);
         }
         i++;

@@ -176,7 +176,7 @@ int DA14580_uartHandler(unsigned char *buf, uint32_t len)
     int i = 0;
     int leftLen = len;
     DA14580_MSG *msg = (DA14580_MSG *)buf;
-    while(len >= msg->length + sizeof(DA14580_MSG))
+    while(1)
     {
         if(msg->signature != (short)(0xA5A5))
         {
@@ -196,5 +196,4 @@ int DA14580_uartHandler(unsigned char *buf, uint32_t len)
         msg = (DA14580_MSG *)((const char *)buf + len - leftLen);
 
     }
-    return 0;
 }
